@@ -38,6 +38,7 @@ Form
 		Layout.columnSpan: 2
 		values: [
 			{ value: "ebicGlasso",		label: "EBICglasso"			},
+			{ value: "ggmModSelect",		label: "ggmModSelect"			},
 			{ value: "cor",				label: qsTr("Correlation")		},
 			{ value: "pcor",			label: qsTr("Partial Correlation")},
 			{ value: "isingFit",		label: "IsingFit"			},
