@@ -38,7 +38,7 @@ Form
 		Layout.columnSpan: 2
 		values: [
 			{ value: "ebicGlasso",		label: "EBICglasso"			},
-			{ value: "ggmModSelect",		label: "ggmModSelect"			},
+			{ value: "ggmModSelect",		label: "ggmModSelect"			}, // <--- NEW
 			{ value: "cor",				label: qsTr("Correlation")		},
 			{ value: "pcor",			label: qsTr("Partial Correlation")},
 			{ value: "isingFit",		label: "IsingFit"			},
@@ -73,7 +73,7 @@ Form
 		{
 			name: "correlationMethod"
 			title: qsTr("Correlation Method")
-			visible: [0, 1, 2].includes(estimator.currentIndex)
+			visible: ["ebicGlasso", "cor", "pcor"].includes(estimator.currentValue)
 			RadioButton { value: "auto";	label: qsTr("Auto"); checked: true	}
 			RadioButton { value: "cor";		label: qsTr("Cor")					}
 			RadioButton { value: "cov";		label: qsTr("Cov")					}
@@ -84,7 +84,7 @@ Form
 		{
 			name: "centralityNormalization"
 			title: qsTr("Centrality Measures")
-			visible: estimator.currentIndex === 0
+			visible: estimator.currentValue === "ebicGlasso"
 			RadioButton { value: "normalized";	label: qsTr("Normalized"); checked: true }
 			RadioButton { value: "relative" ;	label: qsTr("Relative")					}
 			RadioButton { value: "raw";			label: qsTr("Raw")						}
@@ -93,7 +93,7 @@ Form
 		Group
 		{
 			title: qsTr("Network")
-			visible: estimator.currentIndex === 0
+			visible: estimator.currentValue === "ebicGlasso"
 			CheckBox { name: "weightedNetwork"; label: qsTr("Weighted"); checked: true	}
 			CheckBox { name: "signedNetwork";	label: qsTr("Signed");	checked: true	}
 		}
@@ -102,7 +102,7 @@ Form
 		{
 			name: "missingValues"
 			title: qsTr("Missing Values")
-			visible: [0, 1, 2].includes(estimator.currentIndex)
+			visible: ["ebicGlasso", "cor", "pcor"].includes(estimator.currentValue)
 			RadioButton { value: "pairwise";	label: qsTr("Exclude pairwise"); checked: true	}
 			RadioButton { value: "listwise";	label: qsTr("Exclude listwise")					}
 		}
@@ -111,7 +111,7 @@ Form
 		{
 			name: "sampleSize"
 			title: qsTr("Sample Size")
-			visible: estimator.currentIndex === 0
+			visible: estimator.currentValue === "ebicGlasso"
 			RadioButton { value: "maximum";	label: qsTr("Maximum"); checked: true	}
 			RadioButton { value: "minimim";	label: qsTr("Minimum")					}
 		}
@@ -120,7 +120,7 @@ Form
 		{
 			name: "isingEstimator"
 			title: qsTr("Ising Estimator")
-			visible: estimator.currentIndex === 4
+			visible: estimator.currentValue === "isingSampler"
 			RadioButton { value: "pseudoLikelihood";		label: qsTr("Pseudo-likelihood"); checked: true	}
 			RadioButton { value: "univariateRegressions";	label: qsTr("Univariate regressions")			}
 			RadioButton { value: "bivariateRegressions";	label: qsTr("Bivariate regressions")			}
@@ -131,7 +131,7 @@ Form
 		{
 			name: "criterion"
 			title: qsTr("Criterion")
-			visible: [5, 6].includes(estimator.currentIndex)
+			visible: ["huge", "mgm"].includes(estimator.currentValue)
 			RadioButton { value: "ebic";	label: qsTr("EBIC"); checked: true	}
 			RadioButton { value: "ric";		label: qsTr("RIC")					}
 			RadioButton { value: "stars";	label: qsTr("STARS")				}
@@ -142,7 +142,7 @@ Form
 		{
 			name: "rule"
 			title: qsTr("Rule")
-			visible: [3, 6].includes(estimator.currentIndex)
+			visible: ["isingFit", "mgm"].includes(estimator.currentValue)
 			RadioButton { value: "and";	label: qsTr("AND"); checked: true	}
 			RadioButton { value: "or";	label: qsTr("OR")					}
 		}
@@ -151,7 +151,7 @@ Form
 		{
 			name: "split"
 			title: qsTr("Split")
-			visible: [3, 4].includes(estimator.currentIndex)
+			visible: ["isingFit", "isingSampler"].includes(estimator.currentValue)
 			RadioButton { value: "median";	label: qsTr("Median"); checked: true	}
 			RadioButton { value: "mean";	label: qsTr("Mean")						}
 		}
@@ -159,7 +159,7 @@ Form
 		Group
 		{
 			title: qsTr("Tuning Parameter")
-			visible: [0, 3, 5, 7].includes(estimator.currentIndex)
+			visible: ["ebicGlasso", "isingFit", "huge"].includes(estimator.currentValue) // ! NOTE: in previous version when referring by index, it included index 7 which does not exist
 			DoubleField { name: "tuningParameter"; label: qsTr("Value"); defaultValue: 0.5; max: 1 }
 		}
 
@@ -167,7 +167,7 @@ Form
 		{
 			name: "thresholdBox"
 			title: qsTr("Threshold")
-			visible: [1, 2].includes(estimator.currentIndex)
+			visible: ["cor", "pcor"].includes(estimator.currentValue)
 			RadioButton
 			{
 				value: "value";	label: qsTr("Value"); checked: true
@@ -199,13 +199,13 @@ Form
 		Group
 		{
 			title: qsTr("Cross-validation")
-			visible: [6].includes(estimator.currentIndex)
+			visible: ["mgm"].includes(estimator.currentValue)
 			IntegerField { name: "nFolds"; label: qsTr("nFolds"); min: 3; max: 100000; fieldWidth: 60; defaultValue: 3 }
 		}
 
 		VariablesForm
 		{
-			visible: [6].includes(estimator.currentIndex)
+			visible: ["mgm"].includes(estimator.currentValue)
 			AvailableVariablesList
 			{
 				title: qsTr("Variables in network")
@@ -383,7 +383,7 @@ Form
 		{
 			name: "mgmVariableTypeShown";
 			title: qsTr("Show Variable Type")
-			visible: [6].includes(estimator.currentIndex)
+			visible: ["mgm"].includes(estimator.currentValue)
 			RadioButton { value: "hide";		label: qsTr("Don't show")						}
 			RadioButton { value: "nodeColor";	label: qsTr("Using node color")					}
 			RadioButton { value: "nodeShape";	label: qsTr("Using node shape"); checked: true	}
