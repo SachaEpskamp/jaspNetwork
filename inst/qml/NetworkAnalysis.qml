@@ -74,10 +74,10 @@ Form
 			name: "correlationMethod"
 			title: qsTr("Correlation Method")
 			visible: ["ebicGlasso", "cor", "pcor"].includes(estimator.currentValue)
-			RadioButton { value: "auto";	label: qsTr("Auto"); checked: true	}
-			RadioButton { value: "cor";		label: qsTr("Cor")					}
-			RadioButton { value: "cov";		label: qsTr("Cov")					}
-			RadioButton { value: "npn";		label: qsTr("Npn")					}
+			RadioButton { value: "auto";	label: qsTr("Auto")					      }
+			RadioButton { value: "cor";		label: qsTr("Cor"); checked: true	} // default as of 2025 //
+			RadioButton { value: "cov";		label: qsTr("Cov")					      }
+			RadioButton { value: "npn";		label: qsTr("Npn")				      	}
 		}
 
 		RadioButtonGroup
@@ -241,7 +241,7 @@ Form
 			RadioButton { value: "case";			label: qsTr("Case")							}
 			RadioButton { value: "node";			label: qsTr("Node")							}
 			RadioButton { value: "parametric";		label: qsTr("Parametric")					}
-			RadioButton { value: "person";			label: qsTr("Person")						}
+			// RadioButton { value: "person";			label: qsTr("Person")						} // // removed in 2025 //
 			RadioButton { value: "jackknife";		label: qsTr("Jackknife")					}
 		}
 
