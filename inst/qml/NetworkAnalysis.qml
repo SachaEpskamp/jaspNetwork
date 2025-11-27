@@ -26,8 +26,8 @@ Form
 	VariablesForm
 	{
 		AvailableVariablesList { name: "allVariablesList" }
-		AssignedVariablesList { name: "variables";			title: qsTr("Dependent Variables"); allowedColumns: ["ordinal", "scale"]; allowTypeChange: true; id: networkVariables}
-		AssignedVariablesList { name: "groupingVariable";	title: qsTr("Split"); singleVariable: true; allowedColumns: [ "nominal"] }
+		AssignedVariablesList  { name: "variables";			   title: qsTr("Dependent Variables");         allowedColumns: ["ordinal", "scale"]; allowTypeChange: true; id: networkVariables}
+		AssignedVariablesList  { name: "groupingVariable"; title: qsTr("Split"); singleVariable: true; allowedColumns: [ "nominal"] }
 	}
 
 	DropDown
@@ -37,32 +37,32 @@ Form
 		label: qsTr("Estimator")
 		Layout.columnSpan: 2
 		values: [
-			{ value: "ebicGlasso",		label: "EBICglasso"			},
-			{ value: "ggmModSelect",		label: "ggmModSelect"			}, // <--- NEW
-			{ value: "cor",				label: qsTr("Correlation")		},
-			{ value: "pcor",			label: qsTr("Partial Correlation")},
-			{ value: "isingFit",		label: "IsingFit"			},
-			{ value: "isingSampler",	label: "IsingSampler"		},
-			{ value: "huge",			label: qsTr("huge")			},
-//			{ value: "adalasso",		label: "adalasso"			},	// no longer available due to removal of parcor from CRAN
-			{ value: "mgm",				label: "mgm"				}
+			{ value: "ebicGlasso",	 label: "EBICglasso"			         },
+			{ value: "ggmModSelect", label: "ggmModSelect"			       }, // NEW @ 2025
+			{ value: "cor",				   label: qsTr("Correlation")		     },
+			{ value: "pcor",			   label: qsTr("Partial Correlation")},
+			{ value: "isingFit",		 label: "IsingFit"			           },
+			{ value: "isingSampler", label: "IsingSampler"             },
+			{ value: "huge",			   label: qsTr("huge")			         },
+			// adalasso no longer available due to removal of parcor from CRAN
+			{ value: "mgm",				   label: "mgm"				               }
 		]
 	}
 
 	Group
 	{
 		title: qsTr("Plots")
-		CheckBox { name: "networkPlot";		label: qsTr("Network plot")								}
-		CheckBox { name: "centralityPlot";	label: qsTr("Centrality plot");		id: centralityPlot	}
-		CheckBox { name: "clusteringPlot";	label: qsTr("Clustering plot")							}
+		CheckBox { name: "networkPlot";		 label: qsTr("Network plot");    id: networkPlot    }
+		CheckBox { name: "centralityPlot"; label: qsTr("Centrality plot"); id: centralityPlot	}
+		CheckBox { name: "clusteringPlot"; label: qsTr("Clustering plot")							        }
 	}
 
 	Group
 	{
 		title: qsTr("Tables")
-		CheckBox { name: "centralityTable";		label: qsTr("Centrality table")	}
-		CheckBox { name: "clusteringTable";		label: qsTr("Clustering table")	}
-		CheckBox { name: "weightsMatrixTable";	label: qsTr("Weights matrix")	}
+		CheckBox { name: "weightsMatrixTable"; label: qsTr("Weights matrix")   }
+		CheckBox { name: "centralityTable";		 label: qsTr("Centrality table") }
+		CheckBox { name: "clusteringTable";		 label: qsTr("Clustering table") }
 	}
 
 	Section
@@ -73,47 +73,42 @@ Form
 		{
 			name: "correlationMethod"
 			title: qsTr("Correlation Method")
-			visible: ["ebicGlasso", "cor", "pcor"].includes(estimator.currentValue)
-			RadioButton { value: "auto";	label: qsTr("Auto")					      }
-			RadioButton { value: "cor";		label: qsTr("Cor"); checked: true	} // default as of 2025 //
-			RadioButton { value: "cov";		label: qsTr("Cov")					      }
-			RadioButton { value: "npn";		label: qsTr("Npn")				      	}
-		}
-
-		RadioButtonGroup
-		{
-			name: "centralityNormalization"
-			title: qsTr("Centrality Measures")
-			visible: estimator.currentValue === "ebicGlasso"
-			RadioButton { value: "normalized";	label: qsTr("Normalized"); checked: true }
-			RadioButton { value: "relative" ;	label: qsTr("Relative")					}
-			RadioButton { value: "raw";			label: qsTr("Raw")						}
+			visible: ["ebicGlasso", "cor", "pcor", "ggmModSelect"].includes(estimator.currentValue)
+			RadioButton { value: "auto";	   label: qsTr("Auto")					     }
+			RadioButton { value: "cor";		   label: qsTr("Cor"); checked: true } // DEFAULT @ 2025
+			RadioButton { value: "cov";		   label: qsTr("Cov")					       }
+			RadioButton { value: "npn";		   label: qsTr("Npn")				       	 }
+			RadioButton { value: "spearman"; label: qsTr("Spearman")			     } // NEW @ 2025
 		}
 
 		Group
 		{
 			title: qsTr("Network")
-			visible: estimator.currentValue === "ebicGlasso"
-			CheckBox { name: "weightedNetwork"; label: qsTr("Weighted"); checked: true	}
-			CheckBox { name: "signedNetwork";	label: qsTr("Signed");	checked: true	}
+			// VISIBLE FOR ALL ESTIMATORS @ 2025
+			CheckBox { name: "weightedNetwork"; label: qsTr("Weighted"); checked: true }
+			CheckBox { name: "signedNetwork";	  label: qsTr("Signed");	 checked: true } // NADYA <- in R code if signed is not checked, lines should be grey (now is blue)
 		}
 
 		RadioButtonGroup
 		{
 			name: "missingValues"
 			title: qsTr("Missing Values")
-			visible: ["ebicGlasso", "cor", "pcor"].includes(estimator.currentValue)
-			RadioButton { value: "pairwise";	label: qsTr("Exclude pairwise"); checked: true	}
-			RadioButton { value: "listwise";	label: qsTr("Exclude listwise")					}
+			visible: ["ebicGlasso", "cor", "pcor", "ggmModSelect"].includes(estimator.currentValue)
+			RadioButton { value: "pairwise"; label: qsTr("Exclude pairwise"); checked: true }
+			RadioButton { value: "listwise"; label: qsTr("Exclude listwise")				  	    }
+			RadioButton { value: "fiml";	   label: qsTr("FIML")					                  } // NEW @ 2025
 		}
 
 		RadioButtonGroup
 		{
 			name: "sampleSize"
 			title: qsTr("Sample Size")
-			visible: estimator.currentValue === "ebicGlasso"
-			RadioButton { value: "maximum";	label: qsTr("Maximum"); checked: true	}
-			RadioButton { value: "minimim";	label: qsTr("Minimum")					}
+			visible: ["ebicGlasso", "cor", "pcor", "ggmModSelect"].includes(estimator.currentValue)
+			RadioButton { value: "pairwise_average"; label: qsTr("Pairwise average"); checked: true	} // NEW & DEFAULT @ 2025
+			RadioButton { value: "maximum";	         label: qsTr("Maximum") }
+			RadioButton { value: "minimum";	         label: qsTr("Minimum") }
+			RadioButton { value: "pairwise_maximum"; label: qsTr("Pairwise maximum") } // NEW @ 2025
+			RadioButton { value: "pairwise_minimum"; label: qsTr("Pairwise minimum") } // NEW @ 2025
 		}
 
 		RadioButtonGroup
@@ -121,10 +116,10 @@ Form
 			name: "isingEstimator"
 			title: qsTr("Ising Estimator")
 			visible: estimator.currentValue === "isingSampler"
-			RadioButton { value: "pseudoLikelihood";		label: qsTr("Pseudo-likelihood"); checked: true	}
-			RadioButton { value: "univariateRegressions";	label: qsTr("Univariate regressions")			}
-			RadioButton { value: "bivariateRegressions";	label: qsTr("Bivariate regressions")			}
-			RadioButton { value: "logLinear";				label: qsTr("Loglinear")						}
+			RadioButton { value: "pseudoLikelihood";		  label: qsTr("Pseudo-likelihood"); checked: true	}
+			RadioButton { value: "univariateRegressions";	label: qsTr("Univariate regressions")	}
+			RadioButton { value: "bivariateRegressions";	label: qsTr("Bivariate regressions") }
+			RadioButton { value: "logLinear";				      label: qsTr("Loglinear") }
 		}
 
 		RadioButtonGroup
@@ -132,10 +127,10 @@ Form
 			name: "criterion"
 			title: qsTr("Criterion")
 			visible: ["huge", "mgm"].includes(estimator.currentValue)
-			RadioButton { value: "ebic";	label: qsTr("EBIC"); checked: true	}
-			RadioButton { value: "ric";		label: qsTr("RIC")					}
-			RadioButton { value: "stars";	label: qsTr("STARS")				}
-			RadioButton { value: "cv";		label: qsTr("CV")					}
+			RadioButton { value: "ebic";	label: qsTr("EBIC"); checked: true }
+			RadioButton { value: "ric";		label: qsTr("RIC")					       }
+			RadioButton { value: "stars";	label: qsTr("STARS")				       }
+			RadioButton { value: "cv";		label: qsTr("CV")					         }
 		}
 
 		RadioButtonGroup
@@ -152,45 +147,50 @@ Form
 			name: "split"
 			title: qsTr("Split")
 			visible: ["isingFit", "isingSampler"].includes(estimator.currentValue)
-			RadioButton { value: "median";	label: qsTr("Median"); checked: true	}
-			RadioButton { value: "mean";	label: qsTr("Mean")						}
+			RadioButton { value: "none";	 label: qsTr("None"); checked: true	} // NEW @ 2025 // NADYA if data is not alr binary it should give warning that data is not binary
+			RadioButton { value: "median"; label: qsTr("Median")              }
+			RadioButton { value: "mean";	 label: qsTr("Mean")						    }
 		}
 
 		Group
 		{
 			title: qsTr("Tuning Parameter")
-			visible: ["ebicGlasso", "isingFit", "huge"].includes(estimator.currentValue) // ! NOTE: in previous version when referring by index, it included index 7 which does not exist
+			visible: ["ebicGlasso", "isingFit", "huge", "mgm", "ggmModSelect"].includes(estimator.currentValue) // ! NOTE: in previous version when referring by index, it included index 7 which does not exist
 			DoubleField { name: "tuningParameter"; label: qsTr("Value"); defaultValue: 0.5; max: 1 }
+			// NADYA double check against ?bootnet::estimateNetwork check tuning argument
+			// default ebicGlasso 0.5, isingFit 0.25, huge 0.5, mgm 0.25, ggmModSelect 0
+			// NADYA need to find out how to set diff defaults for diff stimator.currentValue
 		}
 
 		RadioButtonGroup
 		{
 			name: "thresholdBox"
 			title: qsTr("Threshold")
-			visible: ["cor", "pcor"].includes(estimator.currentValue)
 			RadioButton
 			{
+			// VISIBLE FOR ALL ESTIMATORS @ 2025
 				value: "value";	label: qsTr("Value"); checked: true
 				childrenOnSameRow: true
 				DoubleField { name: "thresholdValue"; defaultValue: 0; max: 1000000000 }
 			}
 			RadioButton
 			{
+			visible: ["cor", "pcor"].includes(estimator.currentValue)
 				value: "method"; label: qsTr("Method")
 				childrenOnSameRow: true
 				DropDown
 				{
 					name: "thresholdMethod"
 					values: [
-						{ label: qsTr("Significant"),	value: "sig"		},
-						{ label: "Bonferroni",	value: "bonferroni"	},
-						{ label: "Locfdr",		value: "locfdr"		},
-						{ label: "Holm",		value: "holm"		},
-						{ label: "Hochberg",	value: "hochberg"	},
-						{ label: "Hommel",		value: "hommel"		},
-						{ label: "BH",			value: "BH"			},
-						{ label: "BY",			value: "BY"			},
-						{ label: "fdr",			value: "fdr"		}
+						{ label: qsTr("Significant"),	value: "sig"	      },
+						{ label: "Bonferroni",	      value: "bonferroni"	},
+						{ label: "Locfdr",		        value: "locfdr"		  },
+						{ label: "Holm",		          value: "holm"		    },
+						{ label: "Hochberg",	        value: "hochberg"	  },
+						{ label: "Hommel",		        value: "hommel"		  },
+						{ label: "BH",			          value: "BH"			    },
+						{ label: "BY",			          value: "BY"			    },
+						{ label: "FDR",			          value: "fdr"		    }
 					]
 				}
 			}
@@ -200,7 +200,9 @@ Form
 		{
 			title: qsTr("Cross-validation")
 			visible: ["mgm"].includes(estimator.currentValue)
-			IntegerField { name: "nFolds"; label: qsTr("nFolds"); min: 3; max: 100000; fieldWidth: 60; defaultValue: 3 }
+			IntegerField { name: "nFolds"; label: qsTr("nFolds"); min: 2; max: 100000; fieldWidth: 60; defaultValue: 10 }
+			// DEFAULT CHANGED FROM 3 TO 10 @ 2025
+			// MIN CHANGED FROM 3 TO 2 @ 2025
 		}
 
 		VariablesForm
@@ -213,9 +215,9 @@ Form
 				source: ["variables"]
 			}
 
-			AssignedVariablesList { name: "mgmContinuousVariables";		title: qsTr("Continuous Variables");	}
-			AssignedVariablesList { name: "mgmCategoricalVariables";	title: qsTr("Categorical Variables");	}
-			AssignedVariablesList { name: "mgmCountVariables";			title: qsTr("Count Variables");			}
+			AssignedVariablesList { name: "mgmContinuousVariables";	 title: qsTr("Continuous Variables")  }
+			AssignedVariablesList { name: "mgmCategoricalVariables"; title: qsTr("Categorical Variables") }
+			AssignedVariablesList { name: "mgmCountVariables";			 title: qsTr("Count Variables")       }
 		}
 	}
 
@@ -226,10 +228,9 @@ Form
 		Group
 		{
 			title: qsTr("Settings")
-			CheckBox	 { name: "bootstrap";		label: qsTr("Bootstrap network")	}
+			CheckBox	   { name: "bootstrap";		      label: qsTr("Bootstrap network") }
 			IntegerField { name: "bootstrapSamples";	label: qsTr("Number of bootstraps"); defaultValue: 0; max: 100000 }
-
-			CheckBox	 { name: "bootstrapParallel";	label: qsTr("Parallel Bootstrap");	checked: false;	visible: false }
+			CheckBox	   { name: "bootstrapParallel";	label: qsTr("Parallel Bootstrap"); checked: false; visible: false }
 		}
 
 		RadioButtonGroup
@@ -238,63 +239,76 @@ Form
 			title: qsTr("Bootstrap Type")
 			Layout.rowSpan: 2
 			RadioButton { value: "nonparametric";	label: qsTr("Nonparametric"); checked: true	}
-			RadioButton { value: "case";			label: qsTr("Case")							}
-			RadioButton { value: "node";			label: qsTr("Node")							}
-			RadioButton { value: "parametric";		label: qsTr("Parametric")					}
-			// RadioButton { value: "person";			label: qsTr("Person")						} // // removed in 2025 //
-			RadioButton { value: "jackknife";		label: qsTr("Jackknife")					}
+			RadioButton { value: "case";			    label: qsTr("Case")							            }
+			RadioButton { value: "node";			    label: qsTr("Node")							            }
+			RadioButton { value: "parametric";		label: qsTr("Parametric")					          }
+			// "person" REMOVED @ 2025 (same as "case")
+			RadioButton { value: "jackknife";		  label: qsTr("Jackknife")					          }
 		}
 
 		Group
 		{
 			title: qsTr("Statistics")
-			CheckBox { name: "statisticsEdges";			label: qsTr("Edges");		checked: true }
-			CheckBox { name: "statisticsCentrality";	label: qsTr("Centrality");	checked: true }
+			CheckBox { name: "statisticsEdges";			 label: qsTr("Edges");		  checked: true }
+			CheckBox { name: "statisticsCentrality"; label: qsTr("Centrality");	checked: true }
 		}
 	}
 
 	Section
 	{
-		title: qsTr("Graphical Options")
+		title: qsTr("Graphical Options - Network Plot")
+		enabled: networkPlot.checked
+
+// NADYA NEED TO ADD SPLIT 0 FOR BOOTSTRAP PLOT
+// NADYA (CHECK BOOTNET, THERES AREA AND THERES INTERVAL)
+// NADYA THIS GOES IN GRAPHICAL OPTIONS NOT BOOTSTRAP OPTIONS
+// NADYA inside plot()
+// NADYA split0 should be default probably (only works for plot interval not plot area)
+// NADYA maybe add 'auto' argument
+
+// NADYA incl plot(plot = "difference")
+
+// NADYA colours add jasp palette
+// NADYA (remind sacha to add to qgraph)
 
 		InputListView
 		{
-			id					: networkFactors
-			name				: "manualColorGroups"
-			title				: qsTr("Group name")
-			optionKey			: "name"
-			defaultValues		: [qsTr("Group 1"), qsTr("Group 2")]
-			placeHolder			: qsTr("New Group")
-			minRows				: 2
-			preferredWidth		: (2 * form.width) / 5
-			rowComponentTitle	: manualColor.checked ? qsTr("Group color") : ""
-			rowComponent: DropDown
+			id					     : networkFactors
+			name				     : "manualColorGroups"
+			title				     : qsTr("Group name")
+			optionKey			   : "name"
+			defaultValues		 : [qsTr("Group 1"), qsTr("Group 2")]
+			placeHolder			 : qsTr("New Group")
+			minRows				   : 2
+			preferredWidth	 : (2 * form.width) / 5
+			rowComponentTitle: manualColor.checked ? qsTr("Group color") : ""
+			rowComponent     : DropDown
 			{
 				name: "color"
 				visible: manualColor.checked
 				values: [
-					{ label: qsTr("red")	, value: "red"		},
-					{ label: qsTr("blue")	, value: "blue"		},
-					{ label: qsTr("yellow")	, value: "yellow"	},
-					{ label: qsTr("green")	, value: "green"	},
-					{ label: qsTr("purple")	, value: "purple"	},
-					{ label: qsTr("orange") , value: "orange"	}
+					{ label: qsTr("red"),    value: "red"		 },
+					{ label: qsTr("blue"),   value: "blue"	 },
+					{ label: qsTr("yellow"), value: "yellow" },
+					{ label: qsTr("green"),  value: "green"	 },
+					{ label: qsTr("purple"), value: "purple" },
+					{ label: qsTr("orange"), value: "orange" }
 				]
 			}
 		}
 
 		AssignedVariablesList
 		{
-			preferredWidth					: (2 * form.width) / 5
-			Layout.fillWidth				: true
-			Layout.leftMargin				: 40
-			title							: qsTr("Variables in network")
-			name							: "colorGroupVariables"
-			source							: ["variables"]
+			preferredWidth					        : (2 * form.width) / 5
+			Layout.fillWidth				        : true
+			Layout.leftMargin				        : 40
+			title							              : qsTr("Variables in network")
+			name							              : "colorGroupVariables"
+			source							            : ["variables"]
 			addAvailableVariablesToAssigned	: true
-			draggable						: false
-			rowComponentTitle				: qsTr("Group")
-			rowComponent: DropDown
+			draggable						            : false
+			rowComponentTitle				        : qsTr("Group")
+			rowComponent                    : DropDown
 			{
 				name: "group"
 				source: ["manualColorGroups"]
@@ -313,12 +327,12 @@ Form
 				label: qsTr("Node palette")
 				indexDefaultValue: 1
 				values: [
-					{ label: qsTr("Rainbow"),		value: "rainbow"	},
-					{ label: qsTr("Colorblind"),	value: "colorblind"	},
-					{ label: qsTr("Pastel"),		value: "pastel"		},
-					{ label: qsTr("Gray"),			value: "gray"		},
-					{ label: qsTr("R"),				value: "R"			},
-					{ label: qsTr("ggplot2"),		value: "ggplot2"	}
+					{ label: qsTr("Rainbow"),		 value: "rainbow"	   },
+					{ label: qsTr("Colorblind"), value: "colorblind" },
+					{ label: qsTr("Pastel"),		 value: "pastel"     },
+					{ label: qsTr("Gray"),			 value: "gray"       },
+					{ label: qsTr("R"),				   value: "R"          },
+					{ label: qsTr("ggplot2"),		 value: "ggplot2"	   }
 				]
 			}
 			DoubleField	{ name: "nodeSize";		label: qsTr("Node size");		defaultValue: 1; max: 10	}
@@ -327,16 +341,17 @@ Form
 		Group
 		{
 			title: qsTr("Edges")
-			DoubleField { name: "edgeSize";			label: qsTr("Edge size");			defaultValue: 1 }
-			DoubleField { name: "maxEdgeStrength";	label: qsTr("Max edge strength");	defaultValue: 0; id: maxEdgeStrength; min: minEdgeStrength.value;	max: 100					}
-			DoubleField { name: "minEdgeStrength";	label: qsTr("Min edge strength");	defaultValue: 0; id: minEdgeStrength; min: -100;					max: maxEdgeStrength.value	}
-			DoubleField { name: "cut";				label: qsTr("Cut");					defaultValue: 0; max: 10 }
-			CheckBox	{ name: "details";			label: qsTr("Show details") }
+
+			DoubleField { name: "edgeSize";			   label: qsTr("Edge size");			   defaultValue: 1 }
+			DoubleField { name: "maxEdgeStrength"; label: qsTr("Max edge strength"); defaultValue: 0; id: maxEdgeStrength; min: minEdgeStrength.value;	max: 100 }
+			DoubleField { name: "minEdgeStrength"; label: qsTr("Min edge strength"); defaultValue: 0; id: minEdgeStrength; min: -100;					          max: maxEdgeStrength.value }
+			DoubleField { name: "cut";			  	   label: qsTr("Cut");					     defaultValue: 0; max: 10 }
+			CheckBox	{ name: "details"; label: qsTr("Show details") }
 			CheckBox
 			{
-								name: "edgeLabels";			label: qsTr("Edge labels");				checked: false
-				DoubleField {	name: "edgeLabelSize";		label: qsTr("Edge label size");			min: 0;			max: 10;	defaultValue: 1		}
-				DoubleField {	name: "edgeLabelPosition";	label: qsTr("Edge label position");		min: 0;			max: 1;		defaultValue: 0.5	}
+				name: "edgeLabels"; label: qsTr("Edge labels"); checked: false
+				DoubleField {	name: "edgeLabelSize";		 label: qsTr("Edge label size");		 min: 0; max: 10;	defaultValue: 1		}
+				DoubleField {	name: "edgeLabelPosition"; label: qsTr("Edge label position"); min: 0; max: 1;  defaultValue: 0.5	}
 			}
 
 			DropDown
@@ -346,14 +361,14 @@ Form
 				indexDefaultValue: 1
 				values:
 				[
-					{ label: qsTr("Classic"),		value: "classic"		},
-					{ label: qsTr("Colorblind"),	value: "colorblind"		},
-					{ label: qsTr("Gray"),			value: "gray"			},
-					{ label: qsTr("Hollywood"),		value: "hollywood"		},
-					{ label: qsTr("Borkulo"),		value: "borkulo"		},
-					{ label: qsTr("TeamFortress"),	value: "teamFortress"	},
-					{ label: qsTr("Reddit"),		value: "reddit"			},
-					{ label: qsTr("Fried"),			value: "fried"			}
+					{ label: qsTr("Classic"),		   value: "classic"      },
+					{ label: qsTr("Colorblind"),	 value: "colorblind"   },
+					{ label: qsTr("Gray"),			   value: "gray"         },
+					{ label: qsTr("Hollywood"),		 value: "hollywood"    },
+					{ label: qsTr("Borkulo"),		   value: "borkulo"      },
+					{ label: qsTr("TeamFortress"), value: "teamFortress" },
+					{ label: qsTr("Reddit"),		   value: "reddit"       },
+					{ label: qsTr("Fried"),			   value: "fried"        }
 				]
 			}
 		}
@@ -361,8 +376,8 @@ Form
 		Group
 		{
 			title: qsTr("Labels")
-			DoubleField { name: "labelSize";	label: qsTr("Label size");		defaultValue: 1; max: 10 }
-			CheckBox	{ name: "labelScale";	label: qsTr("Scale label size");	checked: true }
+			DoubleField { name: "labelSize"; label: qsTr("Label size");	 defaultValue: 1; max: 10 }
+			CheckBox	{ name: "labelScale";	label: qsTr("Scale label size"); checked: true }
 			CheckBox
 			{
 				name: "labelAbbreviation"; label: qsTr("Abbreviate labels to ")
@@ -375,8 +390,8 @@ Form
 		{
 			name: "variableNamesShown";
 			title: qsTr("Show Variable Names")
-			RadioButton { value: "inNodes";			label: qsTr("In plot");	 checked: true	}
-			RadioButton { value: "inLegend";		label: qsTr("In Legend")				}
+			RadioButton { value: "inNodes";	 label: qsTr("In plot"); checked: true }
+			RadioButton { value: "inLegend"; label: qsTr("In legend")				       }
 		}
 
 		RadioButtonGroup
@@ -384,17 +399,17 @@ Form
 			name: "mgmVariableTypeShown";
 			title: qsTr("Show Variable Type")
 			visible: ["mgm"].includes(estimator.currentValue)
-			RadioButton { value: "hide";		label: qsTr("Don't show")						}
-			RadioButton { value: "nodeColor";	label: qsTr("Using node color")					}
-			RadioButton { value: "nodeShape";	label: qsTr("Using node shape"); checked: true	}
+			RadioButton { value: "hide";		  label: qsTr("Don't show")						           }
+			RadioButton { value: "nodeColor";	label: qsTr("Using node color")					       }
+			RadioButton { value: "nodeShape";	label: qsTr("Using node shape"); checked: true }
 		}
 
 		RadioButtonGroup
 		{
 			name: "legend"
 			title: qsTr("Legend")
-			RadioButton { value: "hide";			label: qsTr("No legend")					}
-			RadioButton { value: "allPlots";		label: qsTr("All plots"); checked: true	}
+			RadioButton { value: "hide";			label: qsTr("No legend")					      }
+			RadioButton { value: "allPlots"; 	label: qsTr("All plots"); checked: true	}
 			RadioButton
 			{
 				value: "specificPlot"; label: qsTr("In plot number: ")
@@ -424,16 +439,6 @@ Form
 			}
 			RadioButton { value: "circle";	label: qsTr("Circle")							}
 			RadioButton { value: "data";	label: qsTr("Data");	id: dataRatioButton		}
-		}
-
-		Group
-		{
-			title: qsTr("Measures shown in centrality plot")
-			enabled: centralityPlot.checked
-			CheckBox	{	name: "betweenness";		label: qsTr("Betweenness");			checked: true	}
-			CheckBox	{	name: "closeness";			label: qsTr("Closeness");			checked: true	}
-			CheckBox	{	name: "strength";			label: qsTr("Strength");			checked: true	}
-			CheckBox	{	name: "expectedInfluence";	label: qsTr("Expected Influence");	checked: true	}
 		}
 
 		VariablesForm
@@ -468,4 +473,39 @@ Form
 			}
 		}
 	}
+
+	Section
+	{
+	  title: qsTr("Graphical Options - Centrality Plot")
+		enabled: centralityPlot.checked
+		// STANDALONE SECTION @ 2025
+
+		Group
+		{
+		  // SHIFTED POSITION @ 2025
+		  // NOTE that centrality plots should not show CIs
+			title: qsTr("Measures shown")
+			CheckBox	{	name: "betweenness";	  	 label: qsTr("Betweenness")             }
+			CheckBox	{	name: "closeness";			   label: qsTr("Closeness")               }
+			CheckBox	{	name: "strength";		   	   label: qsTr("Strength"); checked: true	} // DEFAULT @ 2025
+			CheckBox	{	name: "expectedInfluence"; label: qsTr("Expected Influence")      }
+		}
+
+		RadioButtonGroup
+		{
+		  // SHIFTED POSITION @ 2025
+			name: "centralityNormalization"
+			title: qsTr("Measure normalization")
+			// NOW VISIBLE FOR ALL ESTIMATORS @ 2025
+			// NOW VISIBLE ONLY WHEN CENTRALITY PLOT IS REQUESTED @ 2025
+			RadioButton { value: "normalized";	label: qsTr("Normalized"); checked: true }
+			RadioButton { value: "relative";	  label: qsTr("Relative")			          	 }
+			RadioButton { value: "raw";		    	label: qsTr("Raw")			           			 }
+			// NADYA NEED TO INCLUDE RAW ZERO NADYA
+			// NADYA THIS HAS TO BE FIXED IN THE networkanalysis.R FILE - THE qgraph FUNCTION IS OUTDATED
+			// NADYA this correctly updates the centrality table but does not update the plot - fix plot....?
+			// NADYA table should just be raw values.......
+		}
+
+		}
 }
