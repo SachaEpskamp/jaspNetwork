@@ -1418,7 +1418,7 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
           type       = options[["bootstrapType"]],
           nCores     = nCores,
           statistics = c("edge", "strength", "closeness", "betweenness"),
-          labels     = options[["variables"]]
+          labels     = allNetworks[[nm]][["labels"]]
         )
       }
     })
