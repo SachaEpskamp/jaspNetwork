@@ -74,6 +74,15 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
     attr(dataset, "groupingVariableData") <- groupingVariableData
   }
 
+  # Defensive: keep only the columns named in options[["variables"]] in each
+  # split. JASP may include duplicate columns (different encodings of the same
+  # name) when a nominal variable is auto-coerced to ordinal in Dependent
+  # Variables; the byte-exact column selection here picks the matching encoding
+  # and drops the redundant duplicate so downstream type/level alignment works.
+  keepCols <- unlist(options[["variables"]])
+  for (i in seq_along(dataset))
+    dataset[[i]] <- dataset[[i]][, keepCols, drop = FALSE]
+
   if (hasLayoutData)
     attr(dataset, "layoutData") <- layoutData
 
@@ -94,7 +103,8 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
     customChecks <- NULL
 
     # check if data must be binarized
-    if (options[["estimator"]] %in% c("isingFit", "isingSampler")) {
+    if (options[["estimator"]] %in% c("isingFit", "isingSampler") &&
+        !identical(options[["split"]], "none")) {
 
       for (i in seq_along(dataset)) {
         idx <- colnames(dataset[[i]]) != options[["groupingVariable"]]
@@ -763,14 +773,18 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
   edgeColor <- NULL
   if (method == "frequentist" && estimator == "mgm") {
 
-    idx <- integer(length(options[["variables"]]))
+    # Compare on decoded names so JASP's type-specific encodings of the same
+    # column (ordinal in "Dependent Variables" vs. categorical in "Categorical
+    # Variables") still match. Same rationale as in .networkAnalysisMakeBootnetArgs.
+    variablesDec <- jaspBase::decodeColNames(options[["variables"]])
+    idx <- integer(length(variablesDec))
     nms <- c("mgmContinuousVariables", "mgmCategoricalVariables", "mgmCountVariables")
     for (i in seq_along(nms))
-      idx[options[["variables"]] %in% options[[nms[[i]]]]] <- i
+      idx[variablesDec %in% jaspBase::decodeColNames(options[[nms[[i]]]])] <- i
     # idx[i] is 1 if variable[i] %in% mgmContinuousVariables, 2 if in mgmCategoricalVariables, etc.
 
     # order of variables need not match dataset, and thus the order of types may be wrong
-    newOrder <- match(colnames(dataset[[1L]]), options[["variables"]])
+    newOrder <- match(jaspBase::decodeColNames(colnames(dataset[[1L]])), variablesDec)
     # now we have variables[newOrder] == colnames(dataset[[1L]])
     idx <- idx[newOrder]
 
@@ -990,6 +1004,12 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
   if (options[["correlationMethod"]] == "auto")
     options[["correlationMethod"]] <- "cor_auto"
 
+  # bootnet 1.8: missing = "fiml" is only supported with corMethod %in% c("cor_auto", "cor_mantar").
+  # Coerce to "cor_auto" (the only QML-exposed compatible choice) when the user picks an incompatible combo.
+  if (isTRUE(options[["missingValues"]] == "fiml") &&
+      !(options[["correlationMethod"]] %in% c("cor_auto", "cor_mantar")))
+    options[["correlationMethod"]] <- "cor_auto"
+
   options[["isingEstimator"]] <- switch(options[["isingEstimator"]],
                                         "pseudoLikelihood" = "pl",
                                         "univariateRegressions" = "uni",
@@ -1006,6 +1026,14 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
     level <- rep(1, nvar)
     type <- character(nvar)
 
+    # Decode names so that all comparisons happen on the user-visible string.
+    # JASP attaches type-specific metadata to encoded column names: a column
+    # placed in "Dependent Variables" (ordinal-typed) and the same column placed
+    # in "Categorical Variables" (categorical-typed) end up with different
+    # encoded strings even though both decode to the same name. match() on the
+    # raw encoded forms therefore fails; matching on decoded forms works.
+    variablesDec <- jaspBase::decodeColNames(variables)
+
     tempMat <- matrix(ncol = 2, byrow = TRUE, c(
       "mgmContinuousVariables",  "g",
       "mgmCategoricalVariables", "c",
@@ -1014,13 +1042,13 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
     for (i in seq_len(nrow(tempMat))) {
       lookup <- options[[tempMat[i, 1L]]]
       if (length(lookup) > 0L) {
-        idx <- match(lookup, variables)
+        idx <- match(jaspBase::decodeColNames(lookup), variablesDec)
         type[idx] <- tempMat[i, 2L]
       }
     }
 
     # order of variables need not match dataset, and thus the order of types may be wrong
-    newOrder <- match(colnames(dataset[[1L]]), variables)
+    newOrder <- match(jaspBase::decodeColNames(colnames(dataset[[1L]])), variablesDec)
     # now we have variables[newOrder] == colnames(dataset[[1L]])
     type <- type[newOrder]
 
@@ -1061,21 +1089,25 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
   }
 
   # names of .dots must match argument names of bootnet_{estimator name}
+  # Entries default to bootnet's own defaults when the QML hasn't yet wired up the control;
+  # the filter at `nms2keep` below drops any entry whose estimator doesn't accept it.
   .dots <- list(
-    corMethod   = options[["correlationMethod"]],
-    tuning      = options[["tuningParameter"]],
-    missing     = options[["missingValues"]],
-    method      = options[["isingEstimator"]],
-    rule        = options[["rule"]],
-    nFolds      = options[["nFolds"]],
-    weighted    = options[["weightedNetwork"]],
-    signed      = options[["signedNetwork"]],
-    split       = options[["split"]],
-    criterion   = options[["criterion"]],
-    sampleSize  = options[["sampleSize"]],
-    type        = type,
-    lev         = level,
-    threshold   = threshold
+    corMethod           = options[["correlationMethod"]],
+    tuning              = options[["tuningParameter"]],
+    missing             = options[["missingValues"]],
+    method              = options[["isingEstimator"]],
+    rule                = options[["rule"]],
+    nFolds              = options[["nFolds"]],
+    split               = options[["split"]],
+    criterion           = options[["criterion"]],
+    sampleSize          = options[["sampleSize"]],
+    type                = type,
+    level               = level,
+    threshold           = threshold,
+    transform           = if (is.null(options[["transform"]]))           "none" else options[["transform"]],           # bootnet >= 1.4
+    principalDirection  = if (is.null(options[["principalDirection"]]))  FALSE  else options[["principalDirection"]],  # bootnet >= 1.1
+    nonPositiveDefinite = if (is.null(options[["nonPositiveDefinite"]])) "stop" else options[["nonPositiveDefinite"]], # bootnet >= 1.3
+    min_sum             = if (is.null(options[["minSum"]]))              -Inf   else options[["minSum"]]               # bootnet >= 1.5.6 (IsingFit/IsingSampler)
   )
 
   # get available arguments for specific network estimation function. Removes unused ones.
@@ -1088,8 +1120,14 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
   nms2keep <- names(funArgs)
   .dots <- .dots[names(.dots) %in% nms2keep]
 
-  # for safety, when estimator is changed but missing was pairwise (the default).
-  if (!isTRUE("pairwise" %in% eval(funArgs[["missing"]])))
+  # split = "none" means "data is already binary, do not binarize" -- drop the entry
+  # so that bootnet's default ("median") is used (idempotent on already-binary data).
+  if (identical(.dots[["split"]], "none"))
+    .dots[["split"]] <- NULL
+
+  # for safety, when estimator is changed and the chosen 'missing' value is not
+  # in the new estimator's allowed set (e.g. user picked 'fiml' then switched to IsingFit).
+  if (!isTRUE(.dots[["missing"]] %in% eval(funArgs[["missing"]])))
     .dots[["missing"]] <- "listwise"
 
   # some manual adjustments for these estimators
@@ -1138,9 +1176,11 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
     jaspBase::.suppressGrDevice(
       msg <- capture.output(
         network <- bootnet::estimateNetwork(
-          data    = data,
-          default = .networkAnalysisJaspToBootnetEstimator(options[["estimator"]]),
-          .dots   = .dots
+          data     = data,
+          default  = .networkAnalysisJaspToBootnetEstimator(options[["estimator"]]),
+          weighted = options[["weightedNetwork"]],
+          signed   = options[["signedNetwork"]],
+          .dots    = .dots
         )
         , type = "message"
       )
@@ -1395,7 +1435,7 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
   allNetworks <- network[["network"]]
   nGraphs <- length(allNetworks)
   nCores <- .networkAnalysisGetNumberOfCores(options)
-  noTicks <- if (options[["bootstrapType"]] == "jacknife") network[["network"]][[1L]][["nPerson"]] * nGraphs else options[["bootstrapSamples"]] * nGraphs
+  noTicks <- if (options[["bootstrapType"]] == "jackknife") network[["network"]][[1L]][["nPerson"]] * nGraphs else options[["bootstrapSamples"]] * nGraphs
 
   startProgressbar(noTicks * 2L, "Bootstrapping network")
 
@@ -1418,6 +1458,8 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
           type       = options[["bootstrapType"]],
           nCores     = nCores,
           statistics = c("edge", "strength", "closeness", "betweenness"),
+          weighted   = options[["weightedNetwork"]],
+          signed     = options[["signedNetwork"]],
           labels     = allNetworks[[nm]][["labels"]]
         )
       }
