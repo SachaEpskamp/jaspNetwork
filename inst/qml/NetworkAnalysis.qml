@@ -106,9 +106,10 @@ Form
 			name: "missingValues"
 			title: qsTr("Missing Values")
 			visible: ["ebicGlasso", "cor", "pcor", "ggmModSelect"].includes(estimator.currentValue)
-			RadioButton { value: "pairwise"; label: qsTr("Exclude pairwise"); checked: true }
-			RadioButton { value: "listwise"; label: qsTr("Exclude listwise")				  	    }
-			RadioButton { value: "fiml";	   label: qsTr("FIML")					                  } // NEW @ 2025
+			RadioButton { value: "pairwise";  label: qsTr("Exclude pairwise"); checked: true }
+			RadioButton { value: "listwise";  label: qsTr("Exclude listwise")				  	    }
+			RadioButton { value: "fiml";	    label: qsTr("FIML")					                  } // NEW @ 2025 (bootnet cor_mantar / two-step-em)
+			RadioButton { value: "stackedMI"; label: qsTr("Multiple imputation")                } // NEW @ 2026 (bootnet cor_mantar / stacked-mi)
 		}
 
 		RadioButtonGroup

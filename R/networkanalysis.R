@@ -267,6 +267,18 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
     )
   }
 
+  # FIML / multiple imputation are computed with bootnet's mantar-based maximum-likelihood engine
+  # (cor_mantar), which overrides the selected correlation method for the correlation computation.
+  if (options[["estimator"]] %in% c("ebicGlasso", "ggmModSelect", "cor", "pcor") &&
+      options[["missingValues"]] %in% c("fiml", "stackedMI") &&
+      !(options[["correlationMethod"]] %in% c("cor_mantar", "cor_auto", "auto"))) {
+    text <- if (options[["missingValues"]] == "fiml")
+      gettext("FIML missing-data handling is computed with maximum-likelihood correlations (the 'mantar' package); the selected correlation method is not used to estimate the correlations.")
+    else
+      gettext("Multiple imputation is computed with the 'mantar' package; the selected correlation method is not used to estimate the correlations.")
+    tb$addFootnote(text, symbol = gettext("<em>Warning: </em>"))
+  }
+
   if (options[["minEdgeStrength"]] != 0) {
 
     ignored <- logical(nGraphs)
@@ -984,11 +996,16 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
   if (options[["correlationMethod"]] == "auto")
     options[["correlationMethod"]] <- "cor_auto"
 
-  # bootnet 1.8: missing = "fiml" is only supported with corMethod %in% c("cor_auto", "cor_mantar").
-  # Coerce to "cor_auto" (the only QML-exposed compatible choice) when the user picks an incompatible combo.
+  # bootnet 1.9: missing = "stackedMI" (multiple imputation) requires corMethod == "cor_mantar",
+  # and missing = "fiml" requires corMethod %in% c("cor_auto", "cor_mantar"). Both are handled by
+  # the mantar-based ML/imputation engine (cor_mantar), which overrides the selected correlation
+  # method. cor_auto is intentionally not used (kept only when a saved analysis already used it).
+  if (isTRUE(options[["missingValues"]] == "stackedMI"))
+    options[["correlationMethod"]] <- "cor_mantar"
+
   if (isTRUE(options[["missingValues"]] == "fiml") &&
       !(options[["correlationMethod"]] %in% c("cor_auto", "cor_mantar")))
-    options[["correlationMethod"]] <- "cor_auto"
+    options[["correlationMethod"]] <- "cor_mantar"
 
   options[["isingEstimator"]] <- switch(options[["isingEstimator"]],
                                         "pseudoLikelihood" = "pl",
