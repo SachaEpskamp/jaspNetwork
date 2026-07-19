@@ -11,7 +11,6 @@ options$variables <- c("contNormal", "contcor1", "contcor2")
 options$variables.types <- rep("scale", length(options$variables))
 options$centralityTable <- TRUE
 options$clusteringTable <- TRUE
-options$weightsMatrixTable <- TRUE
 options$tableLayout <- TRUE
 results <- jaspTools::runAnalysis("NetworkAnalysis", "test.csv", options)
 
@@ -40,15 +39,6 @@ test_that("clusteringTB table results match", {
   )
 })
 
-test_that("weightmatrixTB table results match", {
-  table <- results[["results"]][["mainContainer"]][["collection"]][["mainContainer_weightsTable"]][["data"]]
-  jaspTools::expect_equal_tables(table,
-                      list("contNormal", 0, 0.0939476582188346, 0, "contcor1", 0.0939476582188346,
-                           0, 0.612057902640958, "contcor2", 0, 0.612057902640958, 0)
-  )
-})
-
-
 options <- jaspTools::analysisOptions("NetworkAnalysis")
 options$bootstrap <- TRUE
 options$bootstrapSamples <- 2
@@ -59,8 +49,7 @@ options$legend <- "allPlots"
 options$variableNamesShown <- "inNodes"
 options$centralityTable <- TRUE
 options$clusteringTable <- TRUE
-options$weightsMatrixTable <- TRUE
-options$variables <- list("A1", "A2", "A3", "A4", "A5")
+options$variables <- c("A1", "A2", "A3", "A4", "A5")
 options$variables.types <- rep("scale", length(options$variables))
 estimators <- c("ebicGlasso","cor","pcor","isingFit","isingSampler","huge","adalasso")
 file <- testthat::test_path("networkResults.rds")
@@ -81,8 +70,9 @@ file <- testthat::test_path("networkResults.rds")
 # for (e in estimators) {
 #   options$estimator <- e
 #   set.seed(1)
-#   results[[e]] <- jaspTools::runAnalysis(options = options, data = "BFI Network.csv", view = FALSE)["results"]
+#   results[[e]] <- jaspTools::runAnalysis(name = "NetworkAnalysis", dataset = "BFI Network.csv", options = options, view = FALSE)["results"]
 #   results[[e]] <- clearEverythingButData(results[[e]])
+#   cat(sprintf("\n\t\t\tFinished estimator %s [%2d/%2d]\n\n", e, which(estimators == e), length(estimators)))
 # }
 # saveRDS(results, file = file)
 storedResults <- readRDS(file)
@@ -91,6 +81,7 @@ skip_if_adalasso <- function(estimator) {
   skip_if(estimator == "adalasso", r"(dependency "parcor" was removed from CRAN so this test is skipped)")
 }
 
+options("jaspRoundToPrecision" = function(x) signif(round(x, digits = 3), digits = 3))
 for (estimator in estimators) {
 
 
@@ -116,13 +107,6 @@ for (estimator in estimators) {
     skip_if_adalasso(estimator)
     table    <- results                   [["results"]][["mainContainer"]][["collection"]][["mainContainer_generalTable"]][["data"]]
     oldTable <- storedResults[[estimator]][["results"]][["mainContainer"]][["collection"]][["mainContainer_generalTable"]][["data"]]
-    jaspTools::expect_equal_tables(table, jaspTools:::collapseTestTable(oldTable))
-  })
-
-  test_that(paste0(estimator, ": Weights matrix table results match"), {
-    skip_if_adalasso(estimator)
-    table    <- results                   [["results"]][["mainContainer"]][["collection"]][["mainContainer_weightsTable"]][["data"]]
-    oldTable <- storedResults[[estimator]][["results"]][["mainContainer"]][["collection"]][["mainContainer_weightsTable"]][["data"]]
     jaspTools::expect_equal_tables(table, jaspTools:::collapseTestTable(oldTable))
   })
 
@@ -167,6 +151,7 @@ for (estimator in estimators) {
     jaspTools::expect_equal_plots(testPlot, paste0(estimator, "-network-plot"))
   })
 }
+options("jaspRoundToPrecision" = NULL)
 
 # test error check
 
@@ -216,54 +201,24 @@ test_that("Incorrect user layout shows a warning", {
 })
 
 # test partial correlation networks work for all thresholds.
-options <- analysisOptions("NetworkAnalysis")
+options <- jaspTools::analysisOptions("NetworkAnalysis")
 options$estimator <- "pcor"
 options$variables <- c(paste0("A", 1:5), paste0("O", 1:5), paste0("E", 1:5))
 options$variables.types <- rep("ordinal", length(options$variables))
 options$networkPlot <- TRUE
-options$weightsMatrixTable <- TRUE
 options$thresholdBox <- "method"
-
-table2df <- function(data, variables) {
-  # transform raw data to data.frame for comparison
-  df <- data.frame(Variable = sapply(data, `[[`, "Variable"))
-  for (i in seq_along(variables))
-    df[[variables[i]]] <- unlist(data[[i]][seq_along(variables)], use.names = FALSE)
-  df
-}
-
-parcorFile <- testthat::test_path("networkResultsParCorThresholds.rds")
-
-# to create the results object
-# tbls <- list()
-# set.seed(147)
-# for (thresholdMethod in c("sig", "bonferroni", "locfdr", "holm", "hochberg", "hommel", "BH", "BY", "fdr")) {
-#   options$thresholdMethod <- thresholdMethod
-#   rr <- runAnalysis(dataset = "BFI Network.csv", options = options, view = FALSE)
-#   df <- table2df(rr[["results"]][["mainContainer"]][["collection"]][["mainContainer_weightsTable"]][["data"]], options$variables)
-#   tbls[[thresholdMethod]] <- df
-# }
-# saveRDS(tbls, file = parcorFile)
-
-tbls <- readRDS(file = parcorFile)
 
 set.seed(147)
 thresholdMethods <- c("sig", "bonferroni", "locfdr", "holm", "hochberg", "hommel", "BH", "BY", "fdr")
 for (thresholdMethod in thresholdMethods) {
 
   options$thresholdMethod <- thresholdMethod
-  results <- runAnalysis(dataset = "BFI Network.csv", options = options)
-
-  test_that(paste0("parcor-threshold-", thresholdMethod, ": Weights matrix matches"), {
-    df <- table2df(results[["results"]][["mainContainer"]][["collection"]][["mainContainer_weightsTable"]][["data"]], options$variables)
-    expected <- tbls[[thresholdMethod]]
-    testthat::expect_equal(df, expected, label = paste0("parcor-threshold-", thresholdMethod))
-  })
+  results <- jaspTools::runAnalysis(dataset = "BFI Network.csv", options = options)
 
   plotName <- results[["results"]][["mainContainer"]][["collection"]][["mainContainer_plotContainer"]][["collection"]][["mainContainer_plotContainer_networkPlotContainer"]][["collection"]][["mainContainer_plotContainer_networkPlotContainer_Network"]][["data"]]
   testPlot <- results[["state"]][["figures"]][[plotName]][["obj"]]
   test_that(paste0("parcor-threshold-", thresholdMethod, ": Network Plot matches"), {
-    expect_equal_plots(test = testPlot, paste0("parcor-threshold-", thresholdMethod))
+    jaspTools::expect_equal_plots(test = testPlot, paste0("parcor-threshold-", thresholdMethod))
   })
 }
 

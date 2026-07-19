@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: jaspNetwork 0.19.2\n"
-"POT-Creation-Date: 2025-01-18 02:34\n"
-"PO-Revision-Date: 2025-02-28 14:02+0000\n"
-"Last-Translator: Shun Wang <shuonwang@gmail.com>\n"
+"POT-Creation-Date: 2026-05-16 03:29\n"
+"PO-Revision-Date: 2025-09-15 18:03+0000\n"
+"Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
 "Language-Team: Tamil <https://hosted.weblate.org/projects/jasp/jaspnetwork-r/"
 "ta/>\n"
 "Language: ta\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.3-dev\n"
+"X-Generator: Weblate 5.14-dev\n"
 
 msgid "Summary of Network"
 msgstr "நெட்வொர்க்கின் சுருக்கம்"
@@ -22,30 +22,99 @@ msgstr "பிணையம்"
 msgid "Number of nodes"
 msgstr "முனைகளின் எண்ணிக்கை"
 
-msgid "Number of non-zero edges"
-msgstr "பூச்சியமற்ற விளிம்புகளின் எண்ணிக்கை"
+#, fuzzy
+msgid "Number of included edges"
+msgstr "விளிம்புகளின் எண்ணிக்கை"
+
+#, fuzzy
+msgid "Number of excluded edges"
+msgstr "விளிம்புகளின் எண்ணிக்கை"
+
+msgid "Number of edges with inconclusive evidence"
+msgstr ""
 
 msgid "Sparsity"
 msgstr "ச்பார்சிட்டி"
 
 msgid ""
-"The Ordinal Markov Random Field may require a substantial amount of time to "
-"complete. This time increases with the number of variables and the number of "
-"iterations."
+"Edge categorization is based on the inclusion criteria BF: included (BF₁₀ ≥ "
+"threshold), excluded (BF₁₀ ≤ 1/threshold), inconclusive (otherwise)."
 msgstr ""
 
-#, fuzzy
+msgid "Could not determine the baseline category for variable %s."
+msgstr ""
+
+msgid ""
+"Some model type assignments refer to variables that are not part of the "
+"analysis: %s."
+msgstr ""
+
+msgid "Variable %s cannot be treated as Blume-Capel because it is not ordinal."
+msgstr ""
+
+msgid ""
+"The Stochastic block model edge prior is not available when Split is "
+"selected. Please use Bernoulli or Beta-binomial."
+msgstr ""
+
+msgid "Unsupported prior family '%s'."
+msgstr ""
+
+msgid "Unsupported edge prior '%s'."
+msgstr ""
+
+msgid "Unsupported difference prior '%s'."
+msgstr ""
+
 msgid ""
 "The analysis failed with the following error message:\n"
 "%s"
 msgstr ""
-"பின்வரும் பிழை செய்தியுடன் Bdgraph தோல்வியடைந்தது:\n"
-" %s"
+"பகுப்பாய்வு தோல்வியடைந்து பின்வரும் பிழைச் செய்தியைப் பெற்றது:\n"
+"%s"
 
 msgid ""
-"Some of the variables you have entered for analysis are not binary or "
-"ordinal. Please make sure that all variables are binary or ordinal or change "
-"the model to gcgm."
+"Unsupported update method '%s'. Please select one of: adaptive-metropolis, "
+"nuts."
+msgstr ""
+
+msgid ""
+"Unsupported edge prior '%s'. Please select one of: Bernoulli, Beta-binomial, "
+"Stochastic block model."
+msgstr ""
+
+msgid "Group"
+msgstr ""
+
+msgid "Estimating group comparison"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"The group comparison failed with the following error message:\n"
+"%s"
+msgstr ""
+"பகுப்பாய்வு தோல்வியடைந்து பின்வரும் பிழைச் செய்தியைப் பெற்றது:\n"
+"%s"
+
+msgid "Differences"
+msgstr ""
+
+msgid "Estimating pooled network"
+msgstr ""
+
+msgid "Pooled"
+msgstr ""
+
+msgid "Estimating %s"
+msgstr ""
+
+msgid "Estimating network"
+msgstr ""
+
+msgid ""
+"Difference network not estimated: all selected variables must be ordinal or "
+"Blume-Capel. Showing separate group estimates instead."
 msgstr ""
 
 msgid ""
@@ -65,11 +134,13 @@ msgstr ""
 msgid "<em>Warning: </em>"
 msgstr "<em> எச்சரிக்கை: </em>"
 
-msgid "Weights matrix"
-msgstr "எடை அணி"
+#, fuzzy
+msgid "Number of different edges"
+msgstr "விளிம்புகளின் எண்ணிக்கை"
 
-msgid "Variable"
-msgstr ""
+#, fuzzy
+msgid "Number of equal edges"
+msgstr "விளிம்புகளின் எண்ணிக்கை"
 
 msgid "Posterior Probability Structure Plots"
 msgstr "பின்புற நிகழ்தகவு கட்டமைப்பு அடுக்கு"
@@ -79,6 +150,9 @@ msgstr "பின்புற நிகழ்தகவு கட்டமைப�
 
 msgid "Centrality measures per variable"
 msgstr "ஒரு மாறிக்கு மைய நடவடிக்கைகள்"
+
+msgid "Variable"
+msgstr "மாறி"
 
 msgid "Betweenness"
 msgstr "இடையில்"
@@ -95,6 +169,27 @@ msgstr "எதிர்பார்க்கப்படும் செல்�
 msgid "Centrality Plot"
 msgstr "மைய சூழ்ச்சி"
 
+msgid "Parameter HDI Plot"
+msgstr ""
+
+msgid "Parameter HDI Plots"
+msgstr ""
+
+msgid ""
+"The difference parameter HDI plot shows the posterior mean and highest "
+"density interval (HDI) for each pairwise difference in partial association "
+"between groups. Positive values indicate a stronger association in the first "
+"group; negative values indicate a stronger association in the second group."
+msgstr ""
+
+msgid ""
+"Posterior samples are required for the parameter HDI plot. Please ensure the "
+"model was fitted with 'save = TRUE'."
+msgstr ""
+
+msgid "%d%% HDI of Partial Association"
+msgstr ""
+
 msgid "Complexity plot"
 msgstr "சிக்கலான சூழ்ச்சி"
 
@@ -104,13 +199,11 @@ msgstr "சிக்கலான அடுக்குகள்"
 msgid "Complexity Plot"
 msgstr "சிக்கலான சூழ்ச்சி"
 
-#, fuzzy
 msgid "Posterior Probability"
-msgstr "பின்புற நிகழ்தகவு கட்டமைப்பு சூழ்ச்சி"
+msgstr "பின்புற நிகழ்தகவு"
 
-#, fuzzy
 msgid "Number of edges"
-msgstr "முனைகளின் எண்ணிக்கை"
+msgstr "விளிம்புகளின் எண்ணிக்கை"
 
 msgid "Structure Plot"
 msgstr "கட்டமைப்பு சூழ்ச்சி"
@@ -132,10 +225,171 @@ msgid ""
 "inclusion probability is either 1 or 0. Please see the help file for more "
 "information."
 msgstr ""
+"முடிவிலியின் மதிப்புகளைக் கொண்ட பேய்ஸ் காரணிகள் மதிப்பிடப்பட்ட பின்புற சேர்க்கை நிகழ்தகவு "
+"1 அல்லது 0 என்பதைக் குறிக்கின்றன. மேலும் தகவலுக்கு உதவி கோப்பைப் பார்க்கவும்."
+
+msgid "Edge Specific Overview"
+msgstr ""
+
+msgid "difference"
+msgstr ""
+
+msgid "equal"
+msgstr ""
+
+msgid "inconclusive"
+msgstr ""
+
+msgid "Relation"
+msgstr ""
+
+msgid "Difference Estimate"
+msgstr ""
+
+#, fuzzy
+msgid "Posterior Diff. Prob."
+msgstr "பின்புற நிகழ்தகவு"
+
+msgid "Difference BF"
+msgstr ""
+
+msgid "Category"
+msgstr ""
+
+msgid "Convergence"
+msgstr ""
+
+msgid "Estimate"
+msgstr ""
+
+msgid ""
+"Difference estimates are based on the median probability model: edges with a "
+"posterior difference probability ≤ 0.5 are set to zero."
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Bayes factors with values of infinity indicate that the estimated posterior "
+"difference probability is either 1 or 0. Please see the help file for more "
+"information."
+msgstr ""
+"முடிவிலியின் மதிப்புகளைக் கொண்ட பேய்ஸ் காரணிகள் மதிப்பிடப்பட்ட பின்புற சேர்க்கை நிகழ்தகவு "
+"1 அல்லது 0 என்பதைக் குறிக்கின்றன. மேலும் தகவலுக்கு உதவி கோப்பைப் பார்க்கவும்."
+
+msgid ""
+"Convergence is the R-hat (Gelman-Rubin) statistic, values greater than about "
+"1.01-1.05 are considered concerning, indicating potential lack of "
+"convergence for the estimates of the pairwise interactions. Consider "
+"increasing the number of iterations and/or chains to improve convergence."
+msgstr ""
+
+msgid ""
+"Convergence is the split-chain R-hat (Gelman-Rubin) statistic, computed post "
+"hoc by splitting the posterior samples into two halves."
+msgstr ""
+
+msgid "included"
+msgstr ""
+
+msgid "excluded"
+msgstr ""
+
+#, fuzzy
+msgid "Posterior Incl. Prob."
+msgstr "பின்புற நிகழ்தகவு"
+
+msgid "Inclusion BF"
+msgstr ""
+
+msgid ""
+"Estimates are based on the median probability model: edges with a posterior "
+"inclusion probability ≤ 0.5 are set to zero."
+msgstr ""
+
+msgid ""
+"Convergence is the R-hat (Gelman-Rubin) statistic, with values greater than "
+"about 1.01-1.05 are considered concerning, indicating potential lack of "
+"convergence for the estimates of the pairwise interactions. Consider "
+"increasing the number of iterations to improve convergence."
+msgstr ""
+
+msgid ""
+"Convergence is the split-chain R-hat (Gelman-Rubin) statistic, computed post "
+"hoc by splitting the posterior samples into two halves. Values greater than "
+"about 1.01-1.05 are considered concerning, indicating potential lack of "
+"convergence for the estimates of the pairwise interactions. Consider "
+"increasing the number of iterations to improve convergence."
+msgstr ""
+
+msgid "Log-odds"
+msgstr ""
+
+#, fuzzy
+msgid "Precision Matrix"
+msgstr "எடை அணி"
+
+msgid "Partial Correlations"
+msgstr ""
+
+msgid "Cluster Allocations (Posterior Mean)"
+msgstr ""
+
+msgid "Cluster Allocations (Posterior Mode)"
+msgstr ""
+
+#, fuzzy
+msgid "Cluster"
+msgstr "கிளச்டரிங் சூழ்ச்சி"
+
+#, fuzzy
+msgid "Posterior Probabilities for the Number of Clusters"
+msgstr "பின்புற நிகழ்தகவு கட்டமைப்பு அடுக்கு"
+
+#, fuzzy
+msgid "Number of blocks"
+msgstr "முனைகளின் எண்ணிக்கை"
+
+#, fuzzy
+msgid "Posterior probability"
+msgstr "பின்புற நிகழ்தகவு"
+
+msgid "Posterior Co-clustering Matrix"
+msgstr ""
+
+msgid "Cluster Bayes Factor"
+msgstr ""
+
+msgid "Hypothesis"
+msgstr ""
+
+msgid "Bayes factor"
+msgstr ""
+
+msgid "Could not compute the cluster Bayes factor: %s"
+msgstr ""
+
+#, fuzzy
+msgid "Clustering vs. no clustering"
+msgstr "கிளச்டரிங் சூழ்ச்சி"
+
+#, fuzzy
+msgid "Co-clustering Matrix Plot"
+msgstr "கிளச்டரிங் சூழ்ச்சி"
+
+#, fuzzy
+msgid "Co-clustering Matrix Plots"
+msgstr "கிளச்டரிங் சூழ்ச்சி"
+
+#, fuzzy
+msgid "Probability"
+msgstr "பின்புற நிகழ்தகவு"
 
 msgid ""
 "After binarizing the data too little variance remained in variable(s): %s."
 msgstr "தரவை இருமியாக்கிய பிறகு மிகக் குறைந்த மாறுபாடு மாறி (கள்) இல் இருந்தது: %s."
+
+msgid "Number of non-zero edges"
+msgstr "பூச்சியமற்ற விளிம்புகளின் எண்ணிக்கை"
 
 msgid "Data was binarized using %s."
 msgstr "%s ஐப் பயன்படுத்தி தரவு பைனரைச் செய்யப்பட்டது."
@@ -265,6 +519,23 @@ msgid "%1$s Y-Coordinates for variable %2$s was not understood."
 msgid_plural "%1$s Y-Coordinates for variables %2$s were not understood."
 msgstr[0] "மாறி %2$s க்கான %1$s y- ஒருங்கிணைப்புகள் புரிந்து கொள்ளப்படவில்லை."
 msgstr[1] "%2$s மாறிகளுக்கு %1$s y- ஒருங்கிணைப்புகள் புரிந்து கொள்ளப்படவில்லை."
+
+#~ msgid ""
+#~ "The Ordinal Markov Random Field may require a substantial amount of time "
+#~ "to complete. This time increases with the number of variables and the "
+#~ "number of iterations."
+#~ msgstr ""
+#~ "ஆர்டினல் மார்கோவ் ரேண்டம் புலத்தை முடிக்க கணிசமான அளவு நேரம் தேவைப்படலாம். இந்த நேரம் "
+#~ "மாறிகளின் எண்ணிக்கை மற்றும் மறு செய்கைகளின் எண்ணிக்கையுடன் அதிகரிக்கிறது."
+
+#~ msgid ""
+#~ "Some of the variables you have entered for analysis are not binary or "
+#~ "ordinal. Please make sure that all variables are binary or ordinal or "
+#~ "change the model to gcgm."
+#~ msgstr ""
+#~ "பகுப்பாய்விற்காக நீங்கள் உள்ளிட்ட சில மாறிகள் பைனரி அல்லது ஆர்டினல் அல்ல. அனைத்து "
+#~ "மாறிகளும் பைனரி அல்லது ஆர்டினல் என்பதை உறுதிப்படுத்திக் கொள்ளுங்கள் அல்லது மாதிரியை "
+#~ "gcgm ஆக மாற்றவும்."
 
 #~ msgid ""
 #~ "Could not invert the posterior rate matrix. Check if the covariance "

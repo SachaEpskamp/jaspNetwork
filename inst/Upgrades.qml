@@ -171,4 +171,35 @@ Upgrades
 		ChangeRename	{	from: 	"addLayoutToData";					to:		"layoutSavedToData"								}
 
 	}
+
+	Upgrade
+	{
+		functionName:		"BayesianNetworkAnalysis"
+		fromVersion:		"0.95.5"
+		toVersion:			"0.96.0"
+
+		ChangeJS
+		{
+			name: "legend"
+			jsFunction: function(options)
+			{
+				switch (options["legend"])
+				{
+					case "specificPlot: ":		return "specificPlot";
+					default:					return options["legend"];
+				}
+			}
+		}
+	}
+
+	Upgrade
+	{
+		functionName:	"BayesianNetworkAnalysis"
+		fromVersion:	"0.96.0"
+		toVersion:		"0.97.0"
+
+		ChangeRemove { name: "model"                }
+		ChangeRemove { name: "dfPrior"              }
+		ChangeRemove { name: "initialConfiguration" }
+	}
 }

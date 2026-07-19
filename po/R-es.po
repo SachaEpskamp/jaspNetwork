@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: JASP 0.9.2\n"
-"POT-Creation-Date: 2025-01-18 02:34\n"
-"PO-Revision-Date: 2025-01-18 19:33+0000\n"
+"POT-Creation-Date: 2026-05-16 03:29\n"
+"PO-Revision-Date: 2026-05-19 08:11+0000\n"
 "Last-Translator: ecadrian <ecadrian@hotmail.com>\n"
-"Language-Team: Spanish <https://hosted.weblate.org/projects/jasp/"
-"jaspnetwork-r/es/>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/jasp/jaspnetwork-"
+"r/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10-dev\n"
+"X-Generator: Weblate 2026.6.dev0\n"
 
 msgid "Summary of Network"
 msgstr "Resumen de la Red"
@@ -22,20 +22,55 @@ msgstr "Red"
 msgid "Number of nodes"
 msgstr "Número de nodos"
 
-msgid "Number of non-zero edges"
-msgstr "Número de bordes no nulos"
+msgid "Number of included edges"
+msgstr "Número de bordes incluídos"
+
+msgid "Number of excluded edges"
+msgstr "Número de bordes excluídos"
+
+msgid "Number of edges with inconclusive evidence"
+msgstr "Número de bordes con evidencia no concluyente"
 
 msgid "Sparsity"
 msgstr "Exigüidad"
 
 msgid ""
-"The Ordinal Markov Random Field may require a substantial amount of time to "
-"complete. This time increases with the number of variables and the number of "
-"iterations."
+"Edge categorization is based on the inclusion criteria BF: included (BF₁₀ ≥ "
+"threshold), excluded (BF₁₀ ≤ 1/threshold), inconclusive (otherwise)."
 msgstr ""
-"El Campo Aleatorio Ordinario de Markov puede requerir una gran cantidad de "
-"tiempo para completarse. Este tiempo aumenta con el número de variables y el "
-"número de iteraciones."
+"La categorización de los bordes se basa en el FB de los criterios de "
+"inclusión: incluidos (FB₁₀ ≥ umbral), excluidos (FB₁₀ ≤ 1/umbral), no "
+"concluyente (en outro caso)."
+
+msgid "Could not determine the baseline category for variable %s."
+msgstr "No se puede determinar la categoría de referencia para la variable %s."
+
+msgid ""
+"Some model type assignments refer to variables that are not part of the "
+"analysis: %s."
+msgstr ""
+"Algunas asignaciones del tipo de modelo se refieren a variables que no son "
+"parte del análisis: %s."
+
+msgid "Variable %s cannot be treated as Blume-Capel because it is not ordinal."
+msgstr ""
+"La variable %s no se puede tratar como de Blume-Capel porque no es ordinal."
+
+msgid ""
+"The Stochastic block model edge prior is not available when Split is "
+"selected. Please use Bernoulli or Beta-binomial."
+msgstr ""
+"La Previa del borde del modelo estocástico de bloques no está disponible "
+"cuando se selecciona Dividir. Por favor, utiliza Bernoulli o Beta-Binomial."
+
+msgid "Unsupported prior family '%s'."
+msgstr "Familia de previas no admitida '%s'."
+
+msgid "Unsupported edge prior '%s'."
+msgstr "Previa de bordes no admitida '%s'."
+
+msgid "Unsupported difference prior '%s'."
+msgstr "Previa de diferencias no admitida '%s'."
 
 msgid ""
 "The analysis failed with the following error message:\n"
@@ -45,13 +80,54 @@ msgstr ""
 "%s"
 
 msgid ""
-"Some of the variables you have entered for analysis are not binary or "
-"ordinal. Please make sure that all variables are binary or ordinal or change "
-"the model to gcgm."
+"Unsupported update method '%s'. Please select one of: adaptive-metropolis, "
+"nuts."
 msgstr ""
-"Algunas de las variables introducidas para el análisis no son binarias ni "
-"ordinales. Por favor, asegúrese de que todas las variables son binarias u "
-"ordinales, o cambia el modelo a GCGM."
+"Método de actualización no admitido '%s'. Por favor, selecciona uno entre: "
+"metropolis adaptable, nuts."
+
+msgid ""
+"Unsupported edge prior '%s'. Please select one of: Bernoulli, Beta-binomial, "
+"Stochastic block model."
+msgstr ""
+"Previa de bordes no admitida '%s'. Por favor, selecciona una entre: "
+"Bernoulli, Beta-Binomial, Modelo estocástico de bloques."
+
+msgid "Group"
+msgstr "Grupo"
+
+msgid "Estimating group comparison"
+msgstr "Estimando la comparación de grupos"
+
+msgid ""
+"The group comparison failed with the following error message:\n"
+"%s"
+msgstr ""
+"La comparación de grupos falló con el siguiente mensaje de fallo:\n"
+"%s"
+
+msgid "Differences"
+msgstr "Diferencias"
+
+msgid "Estimating pooled network"
+msgstr "Estimando la red combinada"
+
+msgid "Pooled"
+msgstr "Combinada"
+
+msgid "Estimating %s"
+msgstr "Estimando %s"
+
+msgid "Estimating network"
+msgstr "Estimando red"
+
+msgid ""
+"Difference network not estimated: all selected variables must be ordinal or "
+"Blume-Capel. Showing separate group estimates instead."
+msgstr ""
+"Red de diferencias no estimada: todas las variables seleccionadas deben ser "
+"ordinales o de Blume-Capel. Mostrando en su lugar estimaciones de grupos "
+"separados."
 
 msgid ""
 "Minimum edge strength ignored in the network plot because it was larger than "
@@ -70,11 +146,11 @@ msgstr ""
 msgid "<em>Warning: </em>"
 msgstr "<em>Advertencia: </em>"
 
-msgid "Weights matrix"
-msgstr "Matriz de ponderaciones"
+msgid "Number of different edges"
+msgstr "Número de bordes distintos"
 
-msgid "Variable"
-msgstr "Variable"
+msgid "Number of equal edges"
+msgstr "Número de bordes iguales"
 
 msgid "Posterior Probability Structure Plots"
 msgstr "Gráficos de Estructura de la Probabilidad Posterior"
@@ -84,6 +160,9 @@ msgstr "Gráfica de Estructura de la Probabilidad Posterior"
 
 msgid "Centrality measures per variable"
 msgstr "Medidas de centralidad por variable"
+
+msgid "Variable"
+msgstr "Variable"
 
 msgid "Betweenness"
 msgstr "Intermediación"
@@ -100,6 +179,35 @@ msgstr "Influencia esperada"
 msgid "Centrality Plot"
 msgstr "Gráfico de Centralidad"
 
+msgid "Parameter HDI Plot"
+msgstr "Gráfico de IMD de los parámetros"
+
+msgid "Parameter HDI Plots"
+msgstr "Gráficos de IMD de los parámetros"
+
+msgid ""
+"The difference parameter HDI plot shows the posterior mean and highest "
+"density interval (HDI) for each pairwise difference in partial association "
+"between groups. Positive values indicate a stronger association in the first "
+"group; negative values indicate a stronger association in the second group."
+msgstr ""
+"El gráfico de IMD de los parámetros de las diferencias muestra la media "
+"posterior y el intervalo de mayor densidad (IMD) para cada diferencia por "
+"pares en la asociación parcial entre grupos. Valores positivos indican una "
+"asociación más fuerte en el primer grupo; valores negativos indican una "
+"asociación más fuerte en el segundo grupo."
+
+msgid ""
+"Posterior samples are required for the parameter HDI plot. Please ensure the "
+"model was fitted with 'save = TRUE'."
+msgstr ""
+"Se requieren muestras posteriores para el gráfico de IMD de los parámetros. "
+"Por favor, asegúrese de que el modelo se ajustó con 'save = TRUE' ('guardar "
+"= VERDADERO')."
+
+msgid "%d%% HDI of Partial Association"
+msgstr "IMD con %d%% de la asociación parcial"
+
 msgid "Complexity plot"
 msgstr "Gráfico de Complejidad"
 
@@ -110,7 +218,7 @@ msgid "Complexity Plot"
 msgstr "Gráfico de Complejidad"
 
 msgid "Posterior Probability"
-msgstr "Probabilidad Posterior"
+msgstr "Probabilidad posterior"
 
 msgid "Number of edges"
 msgstr "Número de bordes"
@@ -139,11 +247,182 @@ msgstr ""
 "inclusión posterior estimada es 1 o 0. Por favor, consulte el archivo de "
 "ayuda para más información."
 
+msgid "Edge Specific Overview"
+msgstr "Resumen específico de márgenes"
+
+msgid "difference"
+msgstr "Diferencia"
+
+msgid "equal"
+msgstr "Igual"
+
+msgid "inconclusive"
+msgstr "Inconcluso"
+
+msgid "Relation"
+msgstr "Relación"
+
+msgid "Difference Estimate"
+msgstr "Estimación de la diferencia"
+
+msgid "Posterior Diff. Prob."
+msgstr "Prob. posterior de la diferencia"
+
+msgid "Difference BF"
+msgstr "FB de la diferencia"
+
+msgid "Category"
+msgstr "Categoría"
+
+msgid "Convergence"
+msgstr "Convergencia"
+
+msgid "Estimate"
+msgstr "Estimar"
+
+msgid ""
+"Difference estimates are based on the median probability model: edges with a "
+"posterior difference probability ≤ 0.5 are set to zero."
+msgstr ""
+"Las estimaciones de las diferencias están basadas en el modelo mediano de "
+"probabilidad: los bordes con una probabilidad posterior de diferencia ≤ 0.5 "
+"se fijan en cero."
+
+msgid ""
+"Bayes factors with values of infinity indicate that the estimated posterior "
+"difference probability is either 1 or 0. Please see the help file for more "
+"information."
+msgstr ""
+"Factores de Bayes con valores de infinito indican que la probabilidad "
+"posterior de la diferencia estimada es 1 o 0. Por favor, consulte el archivo "
+"de ayuda para más información."
+
+msgid ""
+"Convergence is the R-hat (Gelman-Rubin) statistic, values greater than about "
+"1.01-1.05 are considered concerning, indicating potential lack of "
+"convergence for the estimates of the pairwise interactions. Consider "
+"increasing the number of iterations and/or chains to improve convergence."
+msgstr ""
+"La convergencia es el estadístico R-circunflejo (Gelman-Rubin), cuyos "
+"valores mayores que 1.01-1.05 aproximadamente se consideran preocupantes, al "
+"indicar una potencial falta de convergencia en las estimaciones de las "
+"interacciones por pares. Considera aumentar el número de iteraciones y/o "
+"cadenas para mejorar la convergencia."
+
+msgid ""
+"Convergence is the split-chain R-hat (Gelman-Rubin) statistic, computed post "
+"hoc by splitting the posterior samples into two halves."
+msgstr ""
+"La convergencia es el estadístico R-circunflejo de división-cadena (Gelman-"
+"Rubin), calculado post hoc separando las muestras posteriores en dos mitades."
+
+msgid "included"
+msgstr "Incluido"
+
+msgid "excluded"
+msgstr "Excluido"
+
+msgid "Posterior Incl. Prob."
+msgstr "Prob. posterior inclusión"
+
+msgid "Inclusion BF"
+msgstr "FB de la Inclusión"
+
+msgid ""
+"Estimates are based on the median probability model: edges with a posterior "
+"inclusion probability ≤ 0.5 are set to zero."
+msgstr ""
+"Las estimaciones están basadas en el modelo mediano de probabilidad: los "
+"bordes con una probabilidad posterior de inclusión ≤ 0.5 se fijan en cero."
+
+msgid ""
+"Convergence is the R-hat (Gelman-Rubin) statistic, with values greater than "
+"about 1.01-1.05 are considered concerning, indicating potential lack of "
+"convergence for the estimates of the pairwise interactions. Consider "
+"increasing the number of iterations to improve convergence."
+msgstr ""
+"La convergencia es el estadístico R-circunflejo (Gelman-Rubin), cuyos "
+"valores mayores que 1.01-1.05 aproximadamente se consideran preocupantes, al "
+"indicar una potencial falta de convergencia en las estimaciones de las "
+"interacciones por pares. Considera aumentar el número de iteraciones para "
+"mejorar la convergencia."
+
+msgid ""
+"Convergence is the split-chain R-hat (Gelman-Rubin) statistic, computed post "
+"hoc by splitting the posterior samples into two halves. Values greater than "
+"about 1.01-1.05 are considered concerning, indicating potential lack of "
+"convergence for the estimates of the pairwise interactions. Consider "
+"increasing the number of iterations to improve convergence."
+msgstr ""
+"La convergencia es el estadístico R-circunflejo de cadenas separadas (Gelman-"
+"Rubin), calculado a posteriori separando las muestras posteriores en dos "
+"mitades. Valores mayores que 1.01-1.05 aproximadamente se consideran "
+"preocupantes, al indicar una potencial falta de convergencia en las "
+"estimaciones de las interacciones por pares. Considera aumentar el número de "
+"iteraciones para mejorar la convergencia."
+
+msgid "Log-odds"
+msgstr "Log-probabilidades"
+
+msgid "Precision Matrix"
+msgstr "Matriz de precisión"
+
+msgid "Partial Correlations"
+msgstr "Correlaciones parciales"
+
+msgid "Cluster Allocations (Posterior Mean)"
+msgstr "Posiciones de conglomerados (Media posterior)"
+
+msgid "Cluster Allocations (Posterior Mode)"
+msgstr "Posiciones de conglomerados (Moda posterior)"
+
+msgid "Cluster"
+msgstr "Conglomerado"
+
+msgid "Posterior Probabilities for the Number of Clusters"
+msgstr "Probabilidades posteriores para el número de conglomerados"
+
+msgid "Number of blocks"
+msgstr "Número de bloques"
+
+msgid "Posterior probability"
+msgstr "Probabilidad posterior"
+
+msgid "Posterior Co-clustering Matrix"
+msgstr "Matriz posterior de Co-conglomeración"
+
+msgid "Cluster Bayes Factor"
+msgstr "Factor de Bayes del conglomerado"
+
+msgid "Hypothesis"
+msgstr "Hipótesis"
+
+msgid "Bayes factor"
+msgstr "Factor de Bayes"
+
+msgid "Could not compute the cluster Bayes factor: %s"
+msgstr "No se puede calcular el Factor conglomerado de Bayes: %s"
+
+msgid "Clustering vs. no clustering"
+msgstr "Conglomeración vs. No conglomeración"
+
+msgid "Co-clustering Matrix Plot"
+msgstr "Gráfico de la matriz de Co-conglomeración"
+
+msgid "Co-clustering Matrix Plots"
+msgstr "Gráficos de matrices de Co-conglomeración"
+
+msgid "Probability"
+msgstr "Probabilidad"
+
 msgid ""
 "After binarizing the data too little variance remained in variable(s): %s."
 msgstr ""
 "Después de hacer que los datos sean binarios, queda muy poca varianza en "
 "la(s) variable(s): %s."
+
+msgid "Number of non-zero edges"
+msgstr "Número de bordes no nulos"
 
 msgid "Data was binarized using %s."
 msgstr "Se hicieron binarios los datos utilizando %s."
@@ -281,6 +560,24 @@ msgid "%1$s Y-Coordinates for variable %2$s was not understood."
 msgid_plural "%1$s Y-Coordinates for variables %2$s were not understood."
 msgstr[0] "%1$s La coordenada Y para la variable %2$s no se ha entendido."
 msgstr[1] "%1$s Las coordenadas Y para las variables %2$s no se han entendido."
+
+#~ msgid ""
+#~ "The Ordinal Markov Random Field may require a substantial amount of time "
+#~ "to complete. This time increases with the number of variables and the "
+#~ "number of iterations."
+#~ msgstr ""
+#~ "El Campo Aleatorio Ordinario de Markov puede requerir una gran cantidad "
+#~ "de tiempo para completarse. Este tiempo aumenta con el número de "
+#~ "variables y el número de iteraciones."
+
+#~ msgid ""
+#~ "Some of the variables you have entered for analysis are not binary or "
+#~ "ordinal. Please make sure that all variables are binary or ordinal or "
+#~ "change the model to gcgm."
+#~ msgstr ""
+#~ "Algunas de las variables introducidas para el análisis no son binarias ni "
+#~ "ordinales. Por favor, asegúrese de que todas las variables son binarias u "
+#~ "ordinales, o cambia el modelo a GCGM."
 
 #~ msgid ""
 #~ "Could not invert the posterior rate matrix. Check if the covariance "
