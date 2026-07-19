@@ -26,20 +26,10 @@ Form
 	VariablesForm
 	{
 		AvailableVariablesList { name: "allVariablesList" }
-		AssignedVariablesList {
-			name: "variables";			title: qsTr("Dependent Variables"); allowTypeChange: true; id: networkVariables
-			allowedColumns: {
-				// Correlation-based estimators only allow non-continuous (ordinal) variables with the "automatic" correlation method
-				if (["ebicGlasso", "ggmModSelect", "cor", "pcor"].includes(estimator.currentValue))
-					if (automaticCorrelationMethod.checked)
-						return ["scale", "ordinal"];
-					else
-						return ["scale"];
-				else
-					return ["scale", "ordinal"];
-			}
-		}
-		AssignedVariablesList { name: "groupingVariable"; title: qsTr("Split"); singleVariable: true; allowedColumns: [ "nominal"] }
+		// Ordinal variables are usable with every correlation method; a warning is shown in the
+		// results when Pearson is used on ordinal data (Spearman is preferred there).
+		AssignedVariablesList  { name: "variables"; title: qsTr("Dependent Variables"); allowedColumns: ["scale", "ordinal"]; allowTypeChange: true; id: networkVariables }
+		AssignedVariablesList  { name: "groupingVariable"; title: qsTr("Split"); singleVariable: true; allowedColumns: [ "nominal"] }
 	}
 
 	DropDown
@@ -86,11 +76,11 @@ Form
 			name: "correlationMethod"
 			title: qsTr("Correlation Method")
 			visible: ["ebicGlasso", "cor", "pcor", "ggmModSelect"].includes(estimator.currentValue)
-			RadioButton { value: "auto";	   label: qsTr("Auto"); id: automaticCorrelationMethod }
-			RadioButton { value: "cor";		   label: qsTr("Cor"); checked: true } // DEFAULT @ 2025
+			// "auto" (bootnet's cor_auto / polychoric) removed: it does not work well. Cor is default; Spearman is preferred for ordinal data.
+			RadioButton { value: "cor";		   label: qsTr("Cor"); checked: true } // DEFAULT @ 2025 (Pearson)
+			RadioButton { value: "spearman"; label: qsTr("Spearman")			     } // preferred for ordinal data
 			RadioButton { value: "cov";		   label: qsTr("Cov")					       }
 			RadioButton { value: "npn";		   label: qsTr("Npn")				       	 }
-			RadioButton { value: "spearman"; label: qsTr("Spearman")			     } // NEW @ 2025
 		}
 
 		RadioButtonGroup

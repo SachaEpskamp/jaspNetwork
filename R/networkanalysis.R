@@ -256,6 +256,17 @@ NetworkAnalysis <- function(jaspResults, dataset, options) {
   if (!is.null(options[["colorNodesByDataMessage"]]))
     tb$addFootnote(options[["colorNodesByDataMessage"]], symbol = gettext("<em>Warning: </em>"))
 
+  # Warn when Pearson correlations are used on ordinal data (Spearman is preferred there).
+  # Ordinal variables in the "Dependent Variables" list are read as factors; scale variables are numeric.
+  if (options[["estimator"]] %in% c("ebicGlasso", "ggmModSelect", "cor", "pcor") &&
+      options[["correlationMethod"]] == "cor" &&
+      any(vapply(dataset[[1L]], is.factor, logical(1L)))) {
+    tb$addFootnote(
+      gettext("Ordinal variables were entered while Pearson correlations ('Cor') are selected. Spearman correlations are generally preferred for ordinal data."),
+      symbol = gettext("<em>Warning: </em>")
+    )
+  }
+
   if (options[["minEdgeStrength"]] != 0) {
 
     ignored <- logical(nGraphs)
